@@ -161,14 +161,14 @@ on_message_publish(Message, _Env) ->
     Json = jsx:encode([
             {type,<<"published">>},
             {topic,Topic},
-            {payload,Payload},
+            {payload,binary_to_list(base64:encode(Payload))},
             {qos,Qos},
             {cluster_node,node()}
             %% ,{ts,emqx_time:now_to_secs(Timestamp)}
     ]),
-    %% ekaf:produce_async(ProduceTopic, Json),
-    NewTopic = re:replace(Topic, "/", ".", [global, {return,list}]),
-    ekaf:produce_async(NewTopic, Payload),
+    ekaf:produce_async(ProduceTopic, Json),
+    %% NewTopic = re:replace(Topic, "/", ".", [global, {return,list}]),
+    %% ekaf:produce_async(NewTopic, Payload),
     {ok, Message}.
 
 
