@@ -167,7 +167,8 @@ on_message_publish(Message, _Env) ->
             %% ,{ts,emqx_time:now_to_secs(Timestamp)}
     ]),
     %% ekaf:produce_async(ProduceTopic, Json),
-    ekaf:produce_async(Topic, Payload),
+    NewTopic = re:replace(Topic, "/", ".", [global, {return,list}]),
+    ekaf:produce_async(NewTopic, Payload),
     {ok, Message}.
 
 
