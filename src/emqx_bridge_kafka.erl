@@ -161,7 +161,7 @@ on_message_publish(Message, _Env) ->
     Json = jsx:encode([
             {type,<<"published">>},
             {topic,Topic},
-            {payload,binary_to_list(base64:encode(Payload))},
+            {payload,base64:encode(Payload))},
             {qos,Qos},
             {cluster_node,node()}
             %% ,{ts,emqx_time:now_to_secs(Timestamp)}
