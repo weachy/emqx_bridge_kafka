@@ -212,7 +212,7 @@ ekaf_init(_Env) ->
 
 ekaf_send(ProduceTopic, Topic, Payload, Qos) ->
     if
-        Topic == "cardata" ->
+        string:equal(Topic, "cardata") ->
             ekaf:produce_async(Topic, Payload);
         true ->
             %% Timestamp=Message#message.timestamp,
@@ -225,5 +225,4 @@ ekaf_send(ProduceTopic, Topic, Payload, Qos) ->
                     %% ,{ts,emqx_time:now_to_secs(Timestamp)}
             ]),
             ekaf:produce_async(ProduceTopic, Json)
-            
     end.
