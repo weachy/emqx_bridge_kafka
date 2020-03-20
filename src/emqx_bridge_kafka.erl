@@ -157,18 +157,8 @@ on_message_publish(Message, _Env) ->
     Topic=Message#message.topic,
     Payload=Message#message.payload,
     Qos=Message#message.qos,
-    %% Timestamp=Message#message.timestamp,
-    Json = jsx:encode([
-            {type,<<"published">>},
-            {topic,Topic},
-            {payload,base64:encode(Payload)},
-            {qos,Qos},
-            {cluster_node,node()}
-            %% ,{ts,emqx_time:now_to_secs(Timestamp)}
-    ]),
-    ekaf:produce_async(ProduceTopic, Json),
-    %% NewTopic = re:replace(Topic, "/", ".", [global, {return,list}]),
-    %% ekaf:produce_async(NewTopic, Payload),
+    
+    ekaf_send(ProduceTopic, Topic, Payload, Qos)
     {ok, Message}.
 
 
@@ -219,3 +209,22 @@ ekaf_init(_Env) ->
     application:set_env(ekaf, ekaf_bootstrap_broker, BootstrapBroker),
     {ok, _} = application:ensure_all_started(ekaf),
     io:format("Initialized ekaf with ~p~n", [BootstrapBroker]).        
+
+
+ekaf_send(ProduceTopic, Topic, Payload, Qos) ->
+    if
+        Topic == "cardata" ->
+            ekaf:produce_async(Topic, Payload);
+        true ->
+            %% Timestamp=Message#message.timestamp,
+            Json = jsx:encode([
+                    {type,<<"published">>},
+                    {topic,Topic},
+                    {payload,Payload},
+                    {qos,Qos},
+                    {cluster_node,node()}
+                    %% ,{ts,emqx_time:now_to_secs(Timestamp)}
+            ]),
+            ekaf:produce_async(ProduceTopic, Json)
+            
+    end.
