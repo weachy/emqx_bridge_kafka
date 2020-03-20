@@ -157,8 +157,7 @@ on_message_publish(Message, _Env) ->
     Topic=Message#message.topic,
     Payload=Message#message.payload,
     Qos=Message#message.qos,
-    
-    ekaf_send(ProduceTopic, Topic, Payload, Qos)
+    ekaf_send(ProduceTopic, Topic, Payload, Qos),
     {ok, Message}.
 
 
