@@ -211,7 +211,7 @@ ekaf_init(_Env) ->
 
 
 ekaf_send(ProduceTopic, Topic, Payload, Qos) ->
-    case string:equal(_Topic, "cardata") of
+    case string:equal(Topic, "cardata") of
         true ->
             ekaf:produce_async(Topic, Payload);
         false ->
