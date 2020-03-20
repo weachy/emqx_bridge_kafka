@@ -211,10 +211,10 @@ ekaf_init(_Env) ->
 
 
 ekaf_send(ProduceTopic, Topic, Payload, Qos) ->
-    if
-        string:equal(Topic, "cardata") ->
-            ekaf:produce_async(Topic, Payload);
+    case string:equal(_Topic, "cardata") of
         true ->
+            ekaf:produce_async(Topic, Payload);
+        false ->
             %% Timestamp=Message#message.timestamp,
             Json = jsx:encode([
                     {type,<<"published">>},
